@@ -1,1 +1,77 @@
+/*
+  OTV — Step 1
+  Power on → Rotate in place until front sensor ≈ 31 inches → Stop
+  (Omni/mecanum robot: in-place spin uses +,−,+,− wheel mix)
 
+  TODO: fill in:
+    - setWheelSpeeds(fl, fr, rl, rr)
+    - readFrontDistanceInches()
+*/
+
+#include <Arduino.h>
+
+// ======= Settings you can tweak =======
+static const float TARGET_IN   = 31.0f;   // aim for 31 inches
+static const float TOL_IN      = 1.0f;    // ±1 inch is OK
+static const uint32_t TIMEOUT  = 15000;   // 15 s safety timeout
+static const int ROTATE_SPEED  = 120;     // wheel power (0..255)
+
+// ======= YOUR MOTOR OUTPUTS (fill these!) =======
+// Set signed speeds for each wheel: -255..+255
+void setWheelSpeeds(int fl, int fr, int rl, int rr) {
+  // TODO: write to your motor driver(s) here
+  // Example idea:
+  // writeMotor(FL_IN1, FL_IN2, FL_PWM, fl);
+  // writeMotor(FR_IN1, FR_IN2, FR_PWM, fr);
+  // writeMotor(RL_IN1, RL_IN2, RL_PWM, rl);
+  // writeMotor(RR_IN1, RR_IN2, RR_PWM, rr);
+}
+
+void stopAll() { setWheelSpeeds(0,0,0,0); }
+
+// ======= YOUR FRONT DISTANCE SENSOR (fill this!) =======
+float readFrontDistanceInches() {
+  // TODO: return the current front distance in INCHES
+  // e.g., float mm = readToFmm(); return mm / 25.4f;
+  return 9999.0f; // placeholder (very far)
+}
+
+// ======= Rotate-in-place until ~31 inches =======
+bool rotateUntilTarget31in() {
+  Serial.println("[OTV] Rotating to find ~31 in target...");
+  uint32_t t0 = millis();
+
+  // In-place CCW spin: (FL, FR, RL, RR) = (+, −, +, −)
+  setWheelSpeeds(+ROTATE_SPEED, -ROTATE_SPEED, +ROTATE_SPEED, -ROTATE_SPEED);
+
+  while (millis() - t0 < TIMEOUT) {
+    float d = readFrontDistanceInches();
+    if (fabs(d - TARGET_IN) <= TOL_IN) {
+      stopAll();
+      Serial.print("[OTV] Locked at ~"); Serial.print(d, 1); Serial.println(" in. Stopping.");
+      return true;
+    }
+    delay(5); // small yield
+  }
+
+  stopAll();
+  Serial.println("[OTV] Timeout: did not see ~31 in. Stopped.");
+  return false;
+}
+
+// ======= Setup / Loop =======
+void setup() {
+  Serial.begin(115200);
+  delay(200);
+  Serial.println();
+  Serial.println("[OTV] Powering on...");
+  // TODO: init your motor driver pins, sensor, etc.
+
+  // Immediately do the rotate-to-31in step
+  rotateUntilTarget31in();
+}
+
+void loop() {
+  // Nothing else for this step.
+  delay(1000);
+}
