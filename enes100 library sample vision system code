@@ -3,7 +3,7 @@
 void setup() {
     // Initialize Enes100 Library
     // Team Name, Mission Type, Marker ID, Room Number, Wifi Module TX Pin, Wifi Module RX Pin
-    Enes100.begin("It's Lit", FIRE, 205, 1116, 3, 2);
+    Enes100.begin("Engineering Elephants", HYDROGEN, 205, 1116, 1, 0);
     // At this point we know we are connected.
     Enes100.println("Connected...");
 }
@@ -38,4 +38,4 @@ void loop() {
     delay(1000);
 }
 
-dddddddd
+
