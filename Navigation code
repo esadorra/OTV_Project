@@ -123,7 +123,7 @@ while (startTheta != 1.461){ // while (startTheta does not equal 1.461)
 }
 //mission code HERE
 // back up a litte
-while (ycoordinate >___){
+while (ycoordinate > 1){
     ycoordinate = Enes100.getY();
       digitalWrite(in1L, LOW);
   digitalWrite(in2L, HIGH);
@@ -138,7 +138,7 @@ while (ycoordinate >___){
   digitalWrite(in4R, HIGH);
   ycoordinate = Enes100.getY();
 
-  if (ycoordinate < __){
+  if (ycoordinate < 1){
       digitalWrite(in1L, LOW);
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
@@ -183,7 +183,7 @@ while (NewTheta = Enes100.getTheta() > 0.10920){
     delay(10);
 }
 // forward a little
-while (xcoordinate < ___){
+while (xcoordinate < 1.0){
     // OTV FORWARD
   //A
   digitalWrite(in1L, HIGH);
@@ -198,7 +198,7 @@ while (xcoordinate < ___){
   digitalWrite(in3R, HIGH);
   digitalWrite(in4R, LOW);
   xcoordinate = Enes100.getX();
-  if (xcoordinate > ___){
+  if (xcoordinate > 1.0){
       digitalWrite(in1L, LOW);
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
@@ -244,7 +244,7 @@ while (ThirdTheta != 1.461){ // while (startTheta does not equal 1.461)
     delay(10);
 }
 //forward to arena edge 
-while (ycoordinate <___){
+while (ycoordinate < 1.9){
     // OTV FORWARD
   //A
   digitalWrite(in1L, HIGH);
@@ -259,7 +259,7 @@ while (ycoordinate <___){
   digitalWrite(in3R, HIGH);
   digitalWrite(in4R, LOW);
   ycoordinate = Enes100.getY();
-  if (ycoordinate >= ___){
+  if (ycoordinate >= 1.9){
       digitalWrite(in1L, LOW);
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
@@ -338,7 +338,7 @@ while (ycoordinate > ___){
 }
 //mission code HERE
 // back up a little
-while (ycoordinate < ___){
+while (ycoordinate < 1){
     ycoordinate = Enes100.getY();
       // OTV BACKWARD
   //A
@@ -354,7 +354,7 @@ while (ycoordinate < ___){
   digitalWrite(in3R, LOW);
   digitalWrite(in4R, HIGH);
   ycoordinate = Enes100.getY();
-  if (ycoordinate >= ___){
+  if (ycoordinate >= 1){
         digitalWrite(in1L, LOW);
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
@@ -369,7 +369,7 @@ while (ycoordinate < ___){
   }
 }
 // rotate until 0 
-while(newTheta = Enes100.getTheta() != __){
+while(newTheta = Enes100.getTheta() != 0){
     // OTV LEFT
     newTheta = Enes100.getTheta();
   //A
@@ -386,7 +386,7 @@ while(newTheta = Enes100.getTheta() != __){
   digitalWrite(in4R, LOW);
   newTheta = Enes100.getTheta();
 
-  if (startTheta = ___){
+  if (startTheta = 0){
     digitalWrite(in1L, LOW);
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
@@ -402,7 +402,7 @@ while(newTheta = Enes100.getTheta() != __){
   delay(10);
 }
 // forward for a little
-while (xcoordinate < ___){
+while (xcoordinate < 1){
     // OTV FORWARD
   //A
   digitalWrite(in1L, HIGH);
@@ -417,7 +417,7 @@ while (xcoordinate < ___){
   digitalWrite(in3R, HIGH);
   digitalWrite(in4R, LOW);
   xcoordinate = Enes100.getX();
-  if (xcoordinate > ___){
+  if (xcoordinate > 1){
       digitalWrite(in1L, LOW);
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
@@ -463,7 +463,7 @@ while (ThirdTheta != 1.461){ // while (startTheta does not equal 1.461)
     delay(10);
 }
 //forward until edge of arena 
-while (ycoordinate <___){
+while (ycoordinate < 1.9){
     // OTV FORWARD
   //A
   digitalWrite(in1L, HIGH);
@@ -478,7 +478,7 @@ while (ycoordinate <___){
   digitalWrite(in3R, HIGH);
   digitalWrite(in4R, LOW);
   ycoordinate = Enes100.getY();
-  if (ycoordinate >= ___){
+  if (ycoordinate >= 1.9){
       digitalWrite(in1L, LOW);
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
@@ -493,7 +493,7 @@ while (ycoordinate <___){
 }
 }
 // move along wall to desired x coordinate, passed all the obstacles 
-while (xcoordinate < ___){
+while (xcoordinate < 2.86){
      // OTV FORWARD
   //A
   digitalWrite(in1L, HIGH);
@@ -508,7 +508,7 @@ while (xcoordinate < ___){
   digitalWrite(in3R, HIGH);
   digitalWrite(in4R, LOW);
   xcoordinate = Enes100.getX();
-  if (xcoordinate > ___){
+  if (xcoordinate > 2.86){
     digitalWrite(in1L, LOW);
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
@@ -523,7 +523,7 @@ while (xcoordinate < ___){
   }
 }
 //slide right until desired y coordinate
-while (ycoordinate > ___){
+while (ycoordinate > 1.5){
     // OTV SLIDE RIGHT
     ycoordinate = Enes100.getY();
   //A
@@ -539,7 +539,7 @@ while (ycoordinate > ___){
   digitalWrite(in3R, HIGH);
   digitalWrite(in4R, LOW);
   ycoordinate = Enes100.get(y);
-  if (ycoordinate < ___){
+  if (ycoordinate < 1.5){
         digitalWrite(in1L, LOW);
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
