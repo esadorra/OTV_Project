@@ -1,77 +1,585 @@
-/*
-  OTV — Step 1
-  Power on → Rotate in place until front sensor ≈ 31 inches → Stop
-  (Omni/mecanum robot: in-place spin uses +,−,+,− wheel mix)
+#include "math.h"
+#include "Arduino.h"
+#include "Enes100.h"
+#include "Tank.h"
 
-  TODO: fill in:
-    - setWheelSpeeds(fl, fr, rl, rr)
-    - readFrontDistanceInches()
-*/
+// H-bridge for left side wheels
+// Motor A direction control pins front left
+int in1L = 2;
+int in2L = 4;
+// Motor B direction control pins bottom left
+int in3L = 6;
+int in4L = 7;
+// H-bridge for right side wheels
+// Motor C direction control pins front right
+int in1R = 8;
+int in2R = 9;
+// Motor D direction control pins bottom right
+int in3R = 10;
+int in4R = 11;
 
-#include <Arduino.h>
-
-// ======= Settings you can tweak =======
-static const float TARGET_IN   = 31.0f;   // aim for 31 inches
-static const float TOL_IN      = 1.0f;    // ±1 inch is OK
-static const uint32_t TIMEOUT  = 15000;   // 15 s safety timeout
-static const int ROTATE_SPEED  = 120;     // wheel power (0..255)
-
-// ======= YOUR MOTOR OUTPUTS (fill these!) =======
-// Set signed speeds for each wheel: -255..+255
-void setWheelSpeeds(int fl, int fr, int rl, int rr) {
-  // TODO: write to your motor driver(s) here
-  // Example idea:
-  // writeMotor(FL_IN1, FL_IN2, FL_PWM, fl);
-  // writeMotor(FR_IN1, FR_IN2, FR_PWM, fr);
-  // writeMotor(RL_IN1, RL_IN2, RL_PWM, rl);
-  // writeMotor(RR_IN1, RR_IN2, RR_PWM, rr);
-}
-
-void stopAll() { setWheelSpeeds(0,0,0,0); }
-
-// ======= YOUR FRONT DISTANCE SENSOR (fill this!) =======
-float readFrontDistanceInches() {
-  // TODO: return the current front distance in INCHES
-  // e.g., float mm = readToFmm(); return mm / 25.4f;
-  return 9999.0f; // placeholder (very far)
-}
-
-// ======= Rotate-in-place until ~31 inches =======
-bool rotateUntilTarget31in() {
-  Serial.println("[OTV] Rotating to find ~31 in target...");
-  uint32_t t0 = millis();
-
-  // In-place CCW spin: (FL, FR, RL, RR) = (+, −, +, −)
-  setWheelSpeeds(+ROTATE_SPEED, -ROTATE_SPEED, +ROTATE_SPEED, -ROTATE_SPEED);
-
-  while (millis() - t0 < TIMEOUT) {
-    float d = readFrontDistanceInches();
-    if (fabs(d - TARGET_IN) <= TOL_IN) {
-      stopAll();
-      Serial.print("[OTV] Locked at ~"); Serial.print(d, 1); Serial.println(" in. Stopping.");
-      return true;
-    }
-    delay(5); // small yield
-  }
-
-  stopAll();
-  Serial.println("[OTV] Timeout: did not see ~31 in. Stopped.");
-  return false;
-}
-
-// ======= Setup / Loop =======
 void setup() {
-  Serial.begin(115200);
-  delay(200);
-  Serial.println();
-  Serial.println("[OTV] Powering on...");
-  // TODO: init your motor driver pins, sensor, etc.
 
-  // Immediately do the rotate-to-31in step
-  rotateUntilTarget31in();
+      pinMode(in1L, OUTPUT);
+  pinMode(in2L, OUTPUT);
+  pinMode(in3L, OUTPUT);
+  pinMode(in4L, OUTPUT);
+  pinMode(in1R, OUTPUT);
+  pinMode(in2R, OUTPUT);
+  pinMode(in3R, OUTPUT);
+  pinMode(in4R, OUTPUT);
+
+  // Turn off motors - Initial state
+  digitalWrite(in1L, LOW);
+  digitalWrite(in2L, LOW);
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, LOW);
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, LOW);
+
+    Enes100.begin("Alec B Lahr", HYDROGEN, 7, 1116, 52, 50);
+    Tank.begin();
+    
+    Enes100.println("Starting rotation");
+    float xcoordinate = Enes100.getX();
+    float ycoordinate = Enes100.getY();
+    float startTheta = Enes100.getTheta();
+    float targetChange = PI/2;
+    float theta;
+    float disrtancex = 30.5;
+    float NewTheta;
+    float ThirdTheta; 
+    float LastTheta;
+    delay(5000);
+    float startingpositionright = Enes100.getY();
+    
+
+// sees if we start on the left or on the right
+if (startpositionright < 1){
+// input code starting from the right
+// rotate until pi/2 
+
+while (startTheta != 1.461){ // while (startTheta does not equal 1.461)
+    startTheta = Enes100.getTheta();
+     digitalWrite(in1L, LOW);
+    digitalWrite(in2L, HIGH);
+  //B
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, HIGH);
+  //C
+  digitalWrite(in1R, HIGH);
+  digitalWrite(in2R, LOW);
+  //D
+  digitalWrite(in3R, HIGH);
+  digitalWrite(in4R, LOW);
+    startTheta = Enes100.getTheta();
+    
+    if (startTheta = 1.461){ // if startTheta = 1.461
+        digitalWrite(in1L, LOW);
+  digitalWrite(in2L, LOW);
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, LOW);
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, LOW);
+        startTheta = Enes100.getTheta();
+        
+        delay(1000);
+    }
+    delay(10);
+}
+// forward to mission site 
+    while (ycoordinate < __){
+    // OTV FORWARD
+  //A
+  digitalWrite(in1L, HIGH);
+  digitalWrite(in2L, LOW);
+  //B
+  digitalWrite(in3L, HIGH);
+  digitalWrite(in4L, LOW);
+  //C
+  digitalWrite(in1R, HIGH);
+  digitalWrite(in2R, LOW);
+  //D
+  digitalWrite(in3R, HIGH);
+  digitalWrite(in4R, LOW);
+  ycoordinate = Enes100.getY();
+
+  if (ycoordinate > __){
+      digitalWrite(in1L, LOW);
+    digitalWrite(in2L, LOW);
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, LOW);
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, LOW);
+  ycoordinate = Enes100.getY();
+  delay(1000);
+  }
+}
+//mission code HERE
+// back up a litte
+while (ycoordinate >___){
+    ycoordinate = Enes100.getY();
+      digitalWrite(in1L, LOW);
+  digitalWrite(in2L, HIGH);
+  //B
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, HIGH);
+  //C
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, HIGH);
+  //D
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, HIGH);
+  ycoordinate = Enes100.getY();
+
+  if (ycoordinate < __){
+      digitalWrite(in1L, LOW);
+  digitalWrite(in2L, LOW);
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, LOW);
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, LOW);
+  ycoordinate = Enes100.getY();
+  delay(1000);
+  }
+}
+// rotate until 0
+while (NewTheta = Enes100.getTheta() > 0.10920){
+    NewTheta = Enes100.getTheta();  
+    digitalWrite(in1L, HIGH);
+  digitalWrite(in2L, LOW);
+  //B
+  digitalWrite(in3L, HIGH);
+  digitalWrite(in4L, LOW);
+  //C
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, HIGH);
+  //D
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, HIGH);
+    NewTheta = Enes100.getTheta();
+    
+    if (NewTheta <= 0.10920){
+        digitalWrite(in1L, LOW);
+  digitalWrite(in2L, LOW);
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, LOW);
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, LOW);
+        NewTheta = Enes100.getTheta();
+        
+        delay(1000);
+    }
+    delay(10);
+}
+// forward a little
+while (xcoordinate < ___){
+    // OTV FORWARD
+  //A
+  digitalWrite(in1L, HIGH);
+  digitalWrite(in2L, LOW);
+  //B
+  digitalWrite(in3L, HIGH);
+  digitalWrite(in4L, LOW);
+  //C
+  digitalWrite(in1R, HIGH);
+  digitalWrite(in2R, LOW);
+  //D
+  digitalWrite(in3R, HIGH);
+  digitalWrite(in4R, LOW);
+  xcoordinate = Enes100.getX();
+  if (xcoordinate > ___){
+      digitalWrite(in1L, LOW);
+  digitalWrite(in2L, LOW);
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, LOW);
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, LOW);
+  xcoordinate = Enes100.getX();
+
+  delay(1000);
+  }
+}
+// rotate until pi/2 
+while (ThirdTheta != 1.461){ // while (startTheta does not equal 1.461)
+    ThirdTheta = Enes100.getTheta();
+     digitalWrite(in1L, LOW);
+    digitalWrite(in2L, HIGH);
+  //B
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, HIGH);
+  //C
+  digitalWrite(in1R, HIGH);
+  digitalWrite(in2R, LOW);
+  //D
+  digitalWrite(in3R, HIGH);
+  digitalWrite(in4R, LOW);
+    ThirdTheta = Enes100.getTheta();
+    
+    if (ThirdTheta = 1.461){ // if startTheta = 1.461
+        digitalWrite(in1L, LOW);
+  digitalWrite(in2L, LOW);
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, LOW);
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, LOW);
+       ThirdTheta = Enes100.getTheta();
+        
+        delay(1000);
+    }
+    delay(10);
+}
+//forward to arena edge 
+while (ycoordinate <___){
+    // OTV FORWARD
+  //A
+  digitalWrite(in1L, HIGH);
+  digitalWrite(in2L, LOW);
+  //B
+  digitalWrite(in3L, HIGH);
+  digitalWrite(in4L, LOW);
+  //C
+  digitalWrite(in1R, HIGH);
+  digitalWrite(in2R, LOW);
+  //D
+  digitalWrite(in3R, HIGH);
+  digitalWrite(in4R, LOW);
+  ycoordinate = Enes100.getY();
+  if (ycoordinate >= ___){
+      digitalWrite(in1L, LOW);
+  digitalWrite(in2L, LOW);
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, LOW);
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, LOW);
+  ycoordinate = Enes100.getY();
+  delay(1000);
+  }
+}
+} else {
+// input coode starting from left
+// rotate until -pi/2
+while (startTheta != 0){
+    startTheta = Enes100.getTheta();
+    // OTV TURN RIGHT
+  //A
+  digitalWrite(in1L, HIGH);
+  digitalWrite(in2L, LOW);
+  //B
+  digitalWrite(in3L, HIGH);
+  digitalWrite(in4L, LOW);
+  //C
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, HIGH);
+  //D
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, HIGH);
+  startTheta = Enes100.getTheta();
+  if (startTheta = 0){
+    digitalWrite(in1L, LOW);
+  digitalWrite(in2L, LOW);
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, LOW);
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, LOW);
+  startTheta = Enes100.getTheta();
+
+  delay(1000);
+  }
+  delay(10); 
+}
+// move straight forward to mission site
+while (ycoordinate > ___){
+      // OTV FORWARD
+  //A
+  digitalWrite(in1L, HIGH);
+  digitalWrite(in2L, LOW);
+  //B
+  digitalWrite(in3L, HIGH);
+  digitalWrite(in4L, LOW);
+  //C
+  digitalWrite(in1R, HIGH);
+  digitalWrite(in2R, LOW);
+  //D
+  digitalWrite(in3R, HIGH);
+  digitalWrite(in4R, LOW);
+  ycoordinate = Enes100.getY();
+  if (ycoordinate <= ____){
+      digitalWrite(in1L, LOW);
+  digitalWrite(in2L, LOW);
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, LOW);
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, LOW);
+  ycoordinate = Enes100.getY(y);
+
+  delay(1000);
+  }
+}
+//mission code HERE
+// back up a little
+while (ycoordinate < ___){
+    ycoordinate = Enes100.getY();
+      // OTV BACKWARD
+  //A
+  digitalWrite(in1L, LOW);
+  digitalWrite(in2L, HIGH);
+  //B
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, HIGH);
+  //C
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, HIGH);
+  //D
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, HIGH);
+  ycoordinate = Enes100.getY();
+  if (ycoordinate >= ___){
+        digitalWrite(in1L, LOW);
+  digitalWrite(in2L, LOW);
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, LOW);
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, LOW);
+    ycoordinate = Enes100.getY();
+    
+    delay(1000);
+  }
+}
+// rotate until 0 
+while(newTheta = Enes100.getTheta() != __){
+    // OTV LEFT
+    newTheta = Enes100.getTheta();
+  //A
+  digitalWrite(in1L, LOW);
+  digitalWrite(in2L, HIGH);
+  //B
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, HIGH);
+  //C
+  digitalWrite(in1R, HIGH);
+  digitalWrite(in2R, LOW);
+  //D
+  digitalWrite(in3R, HIGH);
+  digitalWrite(in4R, LOW);
+  newTheta = Enes100.getTheta();
+
+  if (startTheta = ___){
+    digitalWrite(in1L, LOW);
+  digitalWrite(in2L, LOW);
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, LOW);
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, LOW);
+        startTheta = Enes100.getTheta();
+        
+        delay(1000);
+  }
+  delay(10);
+}
+// forward for a little
+while (xcoordinate < ___){
+    // OTV FORWARD
+  //A
+  digitalWrite(in1L, HIGH);
+  digitalWrite(in2L, LOW);
+  //B
+  digitalWrite(in3L, HIGH);
+  digitalWrite(in4L, LOW);
+  //C
+  digitalWrite(in1R, HIGH);
+  digitalWrite(in2R, LOW);
+  //D
+  digitalWrite(in3R, HIGH);
+  digitalWrite(in4R, LOW);
+  xcoordinate = Enes100.getX();
+  if (xcoordinate > ___){
+      digitalWrite(in1L, LOW);
+  digitalWrite(in2L, LOW);
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, LOW);
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, LOW);
+  xcoordinate = Enes100.getX();
+
+  delay(1000);
+  }
+}
+//rotate until pi/2 
+while (ThirdTheta != 1.461){ // while (startTheta does not equal 1.461)
+    ThirdTheta = Enes100.getTheta();
+     digitalWrite(in1L, LOW);
+    digitalWrite(in2L, HIGH);
+  //B
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, HIGH);
+  //C
+  digitalWrite(in1R, HIGH);
+  digitalWrite(in2R, LOW);
+  //D
+  digitalWrite(in3R, HIGH);
+  digitalWrite(in4R, LOW);
+    ThirdTheta = Enes100.getTheta();
+    
+    if (ThirdTheta = 1.461){ // if startTheta = 1.461
+        digitalWrite(in1L, LOW);
+  digitalWrite(in2L, LOW);
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, LOW);
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, LOW);
+       ThirdTheta = Enes100.getTheta();
+        
+        delay(1000);
+    }
+    delay(10);
+}
+//forward until edge of arena 
+while (ycoordinate <___){
+    // OTV FORWARD
+  //A
+  digitalWrite(in1L, HIGH);
+  digitalWrite(in2L, LOW);
+  //B
+  digitalWrite(in3L, HIGH);
+  digitalWrite(in4L, LOW);
+  //C
+  digitalWrite(in1R, HIGH);
+  digitalWrite(in2R, LOW);
+  //D
+  digitalWrite(in3R, HIGH);
+  digitalWrite(in4R, LOW);
+  ycoordinate = Enes100.getY();
+  if (ycoordinate >= ___){
+      digitalWrite(in1L, LOW);
+  digitalWrite(in2L, LOW);
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, LOW);
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, LOW);
+  ycoordinate = Enes100.getY();
+  delay(1000);
+  }
+}
+}
+// move along wall to desired x coordinate, passed all the obstacles 
+while (xcoordinate < ___){
+     // OTV FORWARD
+  //A
+  digitalWrite(in1L, HIGH);
+  digitalWrite(in2L, LOW);
+  //B
+  digitalWrite(in3L, HIGH);
+  digitalWrite(in4L, LOW);
+  //C
+  digitalWrite(in1R, HIGH);
+  digitalWrite(in2R, LOW);
+  //D
+  digitalWrite(in3R, HIGH);
+  digitalWrite(in4R, LOW);
+  xcoordinate = Enes100.getX();
+  if (xcoordinate > ___){
+    digitalWrite(in1L, LOW);
+  digitalWrite(in2L, LOW);
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, LOW);
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, LOW);
+    ycoordinate = Enes100.getY();
+    
+    delay(1000);
+  }
+}
+//slide right until desired y coordinate
+while (ycoordinate > ___){
+    // OTV SLIDE RIGHT
+    ycoordinate = Enes100.getY();
+  //A
+  digitalWrite(in1L, HIGH);
+  digitalWrite(in2L, LOW);
+  //B
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, HIGH);
+  //C
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, HIGH);
+  //D
+  digitalWrite(in3R, HIGH);
+  digitalWrite(in4R, LOW);
+  ycoordinate = Enes100.get(y);
+  if (ycoordinate < ___){
+        digitalWrite(in1L, LOW);
+  digitalWrite(in2L, LOW);
+  digitalWrite(in3L, LOW);
+  digitalWrite(in4L, LOW);
+  digitalWrite(in1R, LOW);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in3R, LOW);
+  digitalWrite(in4R, LOW);
+    ycoordinate = Enes100.getY();
+    
+    delay(1000);
+  }
+}
+// forward under the barrier 
+ // OTV FORWARD
+  //A
+  digitalWrite(in1L, HIGH);
+  digitalWrite(in2L, LOW);
+  //B
+  digitalWrite(in3L, HIGH);
+  digitalWrite(in4L, LOW);
+  //C
+  digitalWrite(in1R, HIGH);
+  digitalWrite(in2R, LOW);
+  //D
+  digitalWrite(in3R, HIGH);
+  digitalWrite(in4R, LOW);
+
+
+
+
+
 }
 
-void loop() {
-  // Nothing else for this step.
-  delay(1000);
+
+void loop()
+{
+    delay(1000);
+    Enes100.print("X = "); Enes100.println(Enes100.getX());
+    Enes100.print("Y = "); Enes100.println(Enes100.getY());
+    Enes100.print("Theta = "); Enes100.println(Enes100.getTheta());
+    
 }
