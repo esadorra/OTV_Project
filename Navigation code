@@ -39,7 +39,7 @@ void setup() {
   digitalWrite(in3R, LOW);
   digitalWrite(in4R, LOW);
 
-    Enes100.begin("Alec B Lahr", HYDROGEN, 7, 1116, 52, 50);
+    Enes100.begin("elephants", HYDROGEN, 19, 1116, 12, 13);
     Tank.begin();
     
     Enes100.println("Starting rotation");
@@ -55,9 +55,9 @@ void setup() {
     delay(5000);
     float startingpositionright = Enes100.getY();
     
-
+startingpositionright = Enes100.getY();
 // sees if we start on the left or on the right
-if (startpositionright < 1){
+if (startingpositionright < 1){
 // input code starting from the right
 // rotate until pi/2 
 
@@ -92,7 +92,7 @@ while (startTheta != 1.461){ // while (startTheta does not equal 1.461)
     delay(10);
 }
 // forward to mission site 
-    while (ycoordinate < __){
+    while (ycoordinate < 1.5){
     // OTV FORWARD
   //A
   digitalWrite(in1L, HIGH);
@@ -108,7 +108,7 @@ while (startTheta != 1.461){ // while (startTheta does not equal 1.461)
   digitalWrite(in4R, LOW);
   ycoordinate = Enes100.getY();
 
-  if (ycoordinate > __){
+  if (ycoordinate > 1.5){
       digitalWrite(in1L, LOW);
     digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
@@ -307,7 +307,7 @@ while (startTheta != 0){
   delay(10); 
 }
 // move straight forward to mission site
-while (ycoordinate > ___){
+while (ycoordinate > 0.5){
       // OTV FORWARD
   //A
   digitalWrite(in1L, HIGH);
@@ -322,7 +322,7 @@ while (ycoordinate > ___){
   digitalWrite(in3R, HIGH);
   digitalWrite(in4R, LOW);
   ycoordinate = Enes100.getY();
-  if (ycoordinate <= ____){
+  if (ycoordinate <= 0.5){
       digitalWrite(in1L, LOW);
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
@@ -331,7 +331,7 @@ while (ycoordinate > ___){
   digitalWrite(in2R, LOW);
   digitalWrite(in3R, LOW);
   digitalWrite(in4R, LOW);
-  ycoordinate = Enes100.getY(y);
+  ycoordinate = Enes100.getY();
 
   delay(1000);
   }
@@ -369,9 +369,9 @@ while (ycoordinate < 1){
   }
 }
 // rotate until 0 
-while(newTheta = Enes100.getTheta() != 0){
+while(NewTheta = Enes100.getTheta() != 0){
     // OTV LEFT
-    newTheta = Enes100.getTheta();
+    NewTheta = Enes100.getTheta();
   //A
   digitalWrite(in1L, LOW);
   digitalWrite(in2L, HIGH);
@@ -384,7 +384,7 @@ while(newTheta = Enes100.getTheta() != 0){
   //D
   digitalWrite(in3R, HIGH);
   digitalWrite(in4R, LOW);
-  newTheta = Enes100.getTheta();
+  NewTheta = Enes100.getTheta();
 
   if (startTheta = 0){
     digitalWrite(in1L, LOW);
@@ -538,7 +538,7 @@ while (ycoordinate > 1.5){
   //D
   digitalWrite(in3R, HIGH);
   digitalWrite(in4R, LOW);
-  ycoordinate = Enes100.get(y);
+  ycoordinate = Enes100.getY();
   if (ycoordinate < 1.5){
         digitalWrite(in1L, LOW);
   digitalWrite(in2L, LOW);
