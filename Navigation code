@@ -40,7 +40,7 @@ void setup() {
   digitalWrite(in4R, LOW);
 
     Enes100.begin("elephants", HYDROGEN, 19, 1116, 12, 13);
-    Tank.begin();
+    
     
     Enes100.println("Starting rotation");
     float xcoordinate = Enes100.getX();
@@ -52,8 +52,8 @@ void setup() {
     float NewTheta;
     float ThirdTheta; 
     float LastTheta;
-    delay(5000);
     float startingpositionright = Enes100.getY();
+    delay(5000);
     
 startingpositionright = Enes100.getY();
 // sees if we start on the left or on the right
