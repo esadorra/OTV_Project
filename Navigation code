@@ -39,44 +39,49 @@ void setup() {
   digitalWrite(in3R, LOW);
   digitalWrite(in4R, LOW);
 
-    Enes100.begin("elephants", HYDROGEN, 19, 1116, 12, 13);
+Enes100.begin("elephants", HYDROGEN, 19, 1120, 12, 13);
     
     
-    Enes100.println("Starting rotation");
-    float xcoordinate = Enes100.getX();
-    float ycoordinate = Enes100.getY();
-    float startTheta = Enes100.getTheta();
-    float targetChange = PI/2;
-    float theta;
-    float disrtancex = 30.5;
-    float NewTheta;
-    float ThirdTheta; 
-    float LastTheta;
-    float startingpositionright = Enes100.getY();
-    delay(5000);
+Enes100.println("Starting rotation");
+float xcoordinate = Enes100.getX();
+Enes100.println("GOT X");
+float ycoordinate = Enes100.getY();
+Enes100.println("Got Y");
+float startTheta = Enes100.getTheta();
+Enes100.println("Got Theta");
+float targetChange = PI/2;
+float theta;
+float disrtancex = 30.5;
+float NewTheta;
+float ThirdTheta; 
+float LastTheta;
+float startingpositionright = Enes100.getY();
+delay(5000);
     
 startingpositionright = Enes100.getY();
+Enes100.println("code starts now");
 // sees if we start on the left or on the right
 if (startingpositionright < 1){
+  Enes100.println("Starting position is the right");
 // input code starting from the right
 // rotate until pi/2 
-
-while (startTheta != 1.461){ // while (startTheta does not equal 1.461)
+startTheta= Enes100.getTheta();
+while (startTheta != 1.501592653){ // while (startTheta does not equal 1.461)
     startTheta = Enes100.getTheta();
      digitalWrite(in1L, LOW);
-    digitalWrite(in2L, HIGH);
-  //B
-  digitalWrite(in3L, LOW);
-  digitalWrite(in4L, HIGH);
-  //C
-  digitalWrite(in1R, HIGH);
-  digitalWrite(in2R, LOW);
-  //D
-  digitalWrite(in3R, HIGH);
-  digitalWrite(in4R, LOW);
+      digitalWrite(in2L, HIGH);
+      //B
+      digitalWrite(in3L, LOW);
+      digitalWrite(in4L, HIGH);
+     //C
+      digitalWrite(in1R, HIGH);
+     digitalWrite(in2R, LOW);
+      //D
+     digitalWrite(in3R, HIGH);
+      digitalWrite(in4R, LOW);
     startTheta = Enes100.getTheta();
     
-    if (startTheta = 1.461){ // if startTheta = 1.461
+    if (startTheta = 1.501592653){ // if startTheta = 1.461
         digitalWrite(in1L, LOW);
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
@@ -152,7 +157,7 @@ while (ycoordinate > 1){
   }
 }
 // rotate until 0
-while (NewTheta = Enes100.getTheta() > 0.10920){
+while (NewTheta = Enes100.getTheta() > 0.0692036733){
     NewTheta = Enes100.getTheta();  
     digitalWrite(in1L, HIGH);
   digitalWrite(in2L, LOW);
@@ -167,7 +172,7 @@ while (NewTheta = Enes100.getTheta() > 0.10920){
   digitalWrite(in4R, HIGH);
     NewTheta = Enes100.getTheta();
     
-    if (NewTheta <= 0.10920){
+    if (NewTheta <= 0.0692036733){
         digitalWrite(in1L, LOW);
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
@@ -213,7 +218,7 @@ while (xcoordinate < 1.0){
   }
 }
 // rotate until pi/2 
-while (ThirdTheta != 1.461){ // while (startTheta does not equal 1.461)
+while (ThirdTheta != 1.501592653){ // while (startTheta does not equal 1.461)
     ThirdTheta = Enes100.getTheta();
      digitalWrite(in1L, LOW);
     digitalWrite(in2L, HIGH);
@@ -228,7 +233,7 @@ while (ThirdTheta != 1.461){ // while (startTheta does not equal 1.461)
   digitalWrite(in4R, LOW);
     ThirdTheta = Enes100.getTheta();
     
-    if (ThirdTheta = 1.461){ // if startTheta = 1.461
+    if (ThirdTheta = 1.501592653){ // if startTheta = 1.461
         digitalWrite(in1L, LOW);
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
@@ -273,9 +278,10 @@ while (ycoordinate < 1.9){
   }
 }
 } else {
+  Enes100.println("starting position is the left");
 // input coode starting from left
 // rotate until -pi/2
-while (startTheta != 0){
+while (startTheta != -1.501592563){
     startTheta = Enes100.getTheta();
     // OTV TURN RIGHT
   //A
@@ -291,7 +297,7 @@ while (startTheta != 0){
   digitalWrite(in3R, LOW);
   digitalWrite(in4R, HIGH);
   startTheta = Enes100.getTheta();
-  if (startTheta = 0){
+  if (startTheta = -1.501592563){
     digitalWrite(in1L, LOW);
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
@@ -369,7 +375,7 @@ while (ycoordinate < 1){
   }
 }
 // rotate until 0 
-while(NewTheta = Enes100.getTheta() != 0){
+while(NewTheta = Enes100.getTheta() != -0.0692036733){
     // OTV LEFT
     NewTheta = Enes100.getTheta();
   //A
@@ -386,7 +392,7 @@ while(NewTheta = Enes100.getTheta() != 0){
   digitalWrite(in4R, LOW);
   NewTheta = Enes100.getTheta();
 
-  if (startTheta = 0){
+  if (startTheta = -0.0692036733){
     digitalWrite(in1L, LOW);
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
@@ -432,7 +438,7 @@ while (xcoordinate < 1){
   }
 }
 //rotate until pi/2 
-while (ThirdTheta != 1.461){ // while (startTheta does not equal 1.461)
+while (ThirdTheta != 1.501592653){ // while (startTheta does not equal 1.461)
     ThirdTheta = Enes100.getTheta();
      digitalWrite(in1L, LOW);
     digitalWrite(in2L, HIGH);
@@ -447,7 +453,7 @@ while (ThirdTheta != 1.461){ // while (startTheta does not equal 1.461)
   digitalWrite(in4R, LOW);
     ThirdTheta = Enes100.getTheta();
     
-    if (ThirdTheta = 1.461){ // if startTheta = 1.461
+    if (ThirdTheta = 1.501592653){ // if startTheta = 1.461
         digitalWrite(in1L, LOW);
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
