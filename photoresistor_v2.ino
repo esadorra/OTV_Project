@@ -19,13 +19,24 @@ void loop() {
   //Determine which sensor has the highest reading
   maxRead = p1;
   lightOn = "White → Not Working";
-  if (p2 > maxRead) { maxRead = p2; lightOn = "Red → No Power"; }
-  if (p3 > maxRead) { maxRead = p3; lightOn = "Yellow → Low Power"; }
-  if (p4 > maxRead) { maxRead = p4; lightOn = "Green → Full Power"; }
-  if (p5 > maxRead) { maxRead = p5; lightOn = "Blue → Over Power"; }
+  if (p2 < maxRead) { maxRead = p2; lightOn = "Red → No Power"; }
+  if (p3 < maxRead) { maxRead = p3; lightOn = "Yellow → Low Power"; }
+  if (p4 < maxRead) { maxRead = p4; lightOn = "Green → Full Power"; }
+  if (p5 < maxRead) { maxRead = p5; lightOn = "Blue → Over Power"; }
+  
+  Serial.print("A0, white: ");
+  Serial.println(p1);
+  Serial.print("A1, red: ");
+  Serial.println(p2);
+  Serial.print("A2, yellow: ");
+  Serial.println(p3);
+  Serial.print("A3, green: ");
+  Serial.println(p4);
+  Serial.print("A4, blue: ");
+  Serial.println(p5);
   
   Serial.print("Light on: ");
-  Serial.print(lightOn);
- delay(3000);
+  Serial.println(lightOn);
+ delay(1000);
 
 }
