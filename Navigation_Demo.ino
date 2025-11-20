@@ -49,7 +49,7 @@ float R2 = 33000.0;
 
 void setup() {
   delay(1000);
-  Enes100.begin("Enginnering Elephants", HYDROGEN, 19, 1120, 12, 13);
+  Enes100.begin("Enginnering Elephants", HYDROGEN, 19, 1116, 12, 13);
   delay(1000);
   Enes100.println("Starting...");
 
@@ -82,35 +82,37 @@ void setup() {
   miniTest();
 
   /*
-  float distance = activateUltrasonic();
+  //whole navigation logic
   const float obstacleThresholdCm = 5.0;
-  //navigation logic
   if(Enes100.getY() > 1){
     turnToAngle(-PI/2);
-    moveForward();
+    moveUntilDistance(obstacleThresholdCm);
     //mission
-    if(d > 0 && d < obstacleThresholdCm && activateLimitSwitch()){
-      motorOff();
+    if(activateLimitSwitch()){
       activatePhotoresistor();
       measureVoltage();
     }
+    moveBackward();
     turnToAngle(PI/2);
+    slideRight();
+    motorOff();
   } else {
     turnToAngle(PI/2);
+    moveUntilDistance(obstacleThresholdCm);
     //mission
-    if(d > 0 && d < obstacleThresholdCm && activateLimitSwitch()){
-      motorOff();
+    if(activateLimitSwitch()){
       activatePhotoresistor();
       measureVoltage();
     }
+    moveBackward();
+    slideRight();
+    motorOff();
   }
 
   moveUntilY(1.85);
   turnToAngle(0.0);
   moveUntilX(3.0);
-  turnToAngle(-PI/2);
-  moveUntilY(1.48); 
-  turnToAngle(0.0);
+  slideRight();
   moveUntilX(3.6);
   */
 }
@@ -134,6 +136,25 @@ void miniTest(){
   motorOff();
   moveUntilX(3.0);
   motorOff();
+  slideRight();
+  moveUntilX(3.6);
+}
+
+//moves the OTV until the distance reaches below stopCm
+void moveUntilDistance(float stopCm){
+  while(true){
+    fload distance = activateUltrasonic();
+
+    if(distance > 0 && d < stopCm){
+      motofOff();
+      break;
+    }
+
+    moveForward();
+    delay(40);
+    motorOff();
+    delay(20);
+  }
 }
 
 void measureVoltage(){
@@ -186,10 +207,10 @@ void activatePhotoresistor(){
 
   maxRead = r1;
   lightOn = "White → Not Working";
-  if (r2 > maxRead) { maxRead = p2; lightOn = "Red → No Power"; }
-  if (r3 > maxRead) { maxRead = p3; lightOn = "Yellow → Low Power"; }
-  if (r4 > maxRead) { maxRead = p4; lightOn = "Green → Full Power"; }
-  if (r5 > maxRead) { maxRead = p5; lightOn = "Blue → Over Power"; }
+  if (r2 < maxRead) { maxRead = r2; lightOn = "Red → No Power"; }
+  if (r3 < maxRead) { maxRead = r3; lightOn = "Yellow → Low Power"; }
+  if (r4 < maxRead) { maxRead = r4; lightOn = "Green → Full Power"; }
+  if (r5 < maxRead) { maxRead = r5; lightOn = "Blue → Over Power"; }
 
   Enes100.print("Light on: ");
   Enes100.print(lightOn);
