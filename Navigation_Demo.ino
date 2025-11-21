@@ -38,20 +38,15 @@ const int trigPin = 3;
 const int echoPin = 5;
 long duration = 0;
 float cm = 0.0;
-float inches = 0.0;
 
 //voltage reading pin
 const int v = A5;
 int value = 0;
-float voltage = 0;
-float R1 = 47000.0;
-float R2 = 33000.0;
 
 void setup() {
-  delay(1000);
-  Enes100.begin("Enginnering Elephants", HYDROGEN, 19, 1116, 12, 13);
-  delay(1000);
-  Enes100.println("Starting...");
+  //Enes100.begin("Enginnering Elephants", HYDROGEN, 19, 1116, 12, 13);
+  //Enes100.println("Starting...");
+  Serial.begin(9600);
 
   // Set all the motor control pins to outputs
   pinMode(in1L, OUTPUT);
@@ -79,11 +74,11 @@ void setup() {
   // Turn off motors - Initial state
   motorOff();
   
-  miniTest();
+  miniTest3();
 
   /*
   //whole navigation logic
-  const float obstacleThresholdCm = 5.0;
+  const float obstacleThresholdCm = 1.0;
   if(Enes100.getY() > 1){
     turnToAngle(-PI/2);
     moveUntilDistance(obstacleThresholdCm);
@@ -140,28 +135,43 @@ void miniTest(){
   moveUntilX(3.6);
 }
 
+void miniTest2(){
+  //moveForward();
+  //delay(1000);
+  //activatePhotoresistor();
+  Serial.print("Measuring voltage...");
+  measureVoltage();
+  motorOff();
+  delay(1000);
+}
+
+void miniTest3(){
+  //turnToAngle(PI/2 - 0.0692036732);
+  moveUntilDistance(10.0);
+  motorOff();
+}
+
 //moves the OTV until the distance reaches below stopCm
 void moveUntilDistance(float stopCm){
-  while(true){
-    fload distance = activateUltrasonic();
+  moveForward();
 
-    if(distance > 0 && d < stopCm){
-      motofOff();
+  while(true){
+    float distance = activateUltrasonic();
+
+    if(distance > 0 && distance < stopCm){
+      motorOff();
       break;
     }
-
-    moveForward();
-    delay(40);
-    motorOff();
+    
     delay(20);
   }
 }
 
 void measureVoltage(){
   value = analogRead(v);
-  voltage = value * (5.0/1024)*((R1 + R2)/R2);
-  Enes100.print("Voltage = ");
-  Enes100.print(voltage);
+  float voltage = value * (5.0/1023.0);
+  Serial.println("Voltage = ");
+  Serial.println(voltage);
 }
 
 //normalizing angle when we turn so that it do not turn the long way
@@ -183,13 +193,10 @@ long activateUltrasonic(){
   // Read the signal from the sensor
   duration = pulseIn(echoPin, HIGH);
 
-  cm = (duration/2) / 29.1;     // Divide by 29.1 or multiply by 0.0343
-  inches = (duration/2) / 74;  
+  cm = (duration/2) / 29.1;     // Divide by 29.1 or multiply by 0.0343 
    // Divide by 74 or multiply by 0.0135
-  Enes100.print(inches);
-  Enes100.print(" in, ");
-  Enes100.print(cm);
-  Enes100.print(" cm");
+  Serial.print(cm);
+  Serial.print(" cm");
 
 
   delay(50);
@@ -212,9 +219,20 @@ void activatePhotoresistor(){
   if (r4 < maxRead) { maxRead = r4; lightOn = "Green → Full Power"; }
   if (r5 < maxRead) { maxRead = r5; lightOn = "Blue → Over Power"; }
 
+  Enes100.print("A0, white: ");
+  Enes100.println(p1);
+  Enes100.print("A1, red: ");
+  Enes100.println(p2);
+  Enes100.print("A2, yellow: ");
+  Enes100.println(p3);
+  Enes100.print("A3, green: ");
+  Enes100.println(p4);
+  Enes100.print("A4, blue: ");
+  Enes100.println(p5);
+  
   Enes100.print("Light on: ");
-  Enes100.print(lightOn);
-  delay(3000);
+  Enes100.println(lightOn);
+  delay(1000);
 }
 
 boolean activateLimitSwitch(){
@@ -345,7 +363,7 @@ void motorOff(){
 
 //turning the OTV to an assigned angle
 void turnToAngle(float targetAngle){
-    const float threshold = 0.05;
+    const float threshold = 0.03; //need adjustment
 
     targetAngle = normalizeAngle(targetAngle);
     
