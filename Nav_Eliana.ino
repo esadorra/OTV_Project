@@ -32,7 +32,7 @@ const int p5 = A4;
 
 // --------------- ULTRASONIC ------------------
 const int trigPin = 3;
-const int echoPin = 13;   // FIXED & RELIABLE INPUT PIN
+const int echoPin = 5;   // FIXED & RELIABLE INPUT PIN
 
 long duration = 0;
 float cm = 0.0;
