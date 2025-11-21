@@ -46,6 +46,8 @@ const int v = A5;
 // =======================================================
 
 void setup() {
+  Enes100.begin("Engineering Elephants", HYDROGEN, 19, 1116, 12, 13);
+  turnToAngle(PI/2 - 0.08);
 
   Serial.begin(9600);
   
@@ -79,6 +81,7 @@ void setup() {
   miniTest3();
 }
 
+
 void loop() {
   // Just sensor prints
   activatePhotoresistor();
@@ -96,7 +99,7 @@ void loop() {
 
 void miniTest3() {
   Serial.println("Running ultrasonic stop test...");
-  moveUntilDistance(10.0);   // stop at 10 cm
+  moveUntilDistance(5.0);   // stop at 10 cm
   motorOff();
 }
 
@@ -307,17 +310,33 @@ void turnToAngle(float targetAngle){
     if(abs(error) <= threshold)
       break;
 
+    int turnDelay = (int)(abs(error)*50);
+    turnDelay = constrain(turnDelay, 5, 30);
+
     if(error > 0)
       turnLeft();
     else
       turnRight();
 
-    delay(40);
-    motorOff();
-    delay(20);
+    delay(turnDelay);
+    motorBrake();
+    delay(10);
   }
 
-  motorOff();
+  motorBrake();
+  delay(15);
+}
+
+void motorBrake(){
+  digitalWrite(in1L, HIGH);
+  digitalWrite(in2L, HIGH);
+  digitalWrite(in3L, HIGH);
+  digitalWrite(in4L, HIGH);
+
+  digitalWrite(in1R, HIGH);
+  digitalWrite(in2R, HIGH);
+  digitalWrite(in3R, HIGH);
+  digitalWrite(in4R, HIGH);
 }
 
 void moveUntilY(float targetY){
