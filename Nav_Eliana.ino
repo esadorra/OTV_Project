@@ -32,7 +32,7 @@ const int p5 = A4;
 
 // --------------- ULTRASONIC ------------------
 const int trigPin = 3;
-const int echoPin = 5;   // FIXED & RELIABLE INPUT PIN
+const int echoPin = 5;
 
 long duration = 0;
 float cm = 0.0;
@@ -46,12 +46,10 @@ const int v = A5;
 // =======================================================
 
 void setup() {
-  Enes100.begin("Engineering Elephants", HYDROGEN, 19, 1116, 12, 13);
-  turnToAngle(PI/2 - 0.08);
-
+  Enes100.begin("Engineering Elephants", HYDROGEN, 19, 1120, 12, 13);
   Serial.begin(9600);
-  
-  // Motor pins
+
+  // ---------------- Initialize motors BEFORE turning ----------------
   pinMode(in1L, OUTPUT);
   pinMode(in2L, OUTPUT);
   pinMode(in3L, OUTPUT);
@@ -77,13 +75,15 @@ void setup() {
   // Motors off at start
   motorOff();
 
-  // Test stopping using ultrasonic
+  // -------- SAFE TURN NOW THAT MOTORS ARE INITIALIZED --------
+  turnToAngle(1.36);
+
+  // Test ultrasonic stopping
   miniTest3();
 }
 
 
 void loop() {
-  // Just sensor prints
   activatePhotoresistor();
   activateLimitSwitch();
   activateUltrasonic();
@@ -99,7 +99,7 @@ void loop() {
 
 void miniTest3() {
   Serial.println("Running ultrasonic stop test...");
-  moveUntilDistance(5.0);   // stop at 10 cm
+  moveUntilDistance(5.0);
   motorOff();
 }
 
@@ -111,23 +111,19 @@ void miniTest3() {
 
 float activateUltrasonic() {
 
-  // Trigger 10µs pulse
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
 
-  // Read echo with timeout (20ms)
   duration = pulseIn(echoPin, HIGH, 20000);
 
-  // No echo → invalid
   if (duration == 0) {
     Serial.println("Ultrasonic: No echo");
     return -1;
   }
 
-  // Convert to distance
   cm = duration * 0.0343 / 2;
 
   Serial.print("Distance: ");
@@ -138,16 +134,12 @@ float activateUltrasonic() {
 }
 
 
-// ---------------- Move until target distance ----------------
-
 void moveUntilDistance(float stopCm) {
-
   moveForward();
 
   while (true) {
     float distance = activateUltrasonic();
 
-    // Valid reading & close enough
     if (distance > 0 && distance <= stopCm) {
       Serial.println("STOPPING — Object detected.");
       motorOff();
@@ -214,6 +206,7 @@ void moveForward() {
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, HIGH);
   digitalWrite(in4L, LOW);
+
   digitalWrite(in1R, HIGH);
   digitalWrite(in2R, LOW);
   digitalWrite(in3R, HIGH);
@@ -225,6 +218,7 @@ void moveBackward() {
   digitalWrite(in2L, HIGH);
   digitalWrite(in3L, LOW);
   digitalWrite(in4L, HIGH);
+
   digitalWrite(in1R, LOW);
   digitalWrite(in2R, HIGH);
   digitalWrite(in3R, LOW);
@@ -236,6 +230,7 @@ void turnLeft() {
   digitalWrite(in2L, HIGH);
   digitalWrite(in3L, LOW);
   digitalWrite(in4L, HIGH);
+
   digitalWrite(in1R, HIGH);
   digitalWrite(in2R, LOW);
   digitalWrite(in3R, HIGH);
@@ -247,6 +242,7 @@ void turnRight() {
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, HIGH);
   digitalWrite(in4L, LOW);
+
   digitalWrite(in1R, LOW);
   digitalWrite(in2R, HIGH);
   digitalWrite(in3R, LOW);
@@ -258,6 +254,7 @@ void slideLeft() {
   digitalWrite(in2L, HIGH);
   digitalWrite(in3L, HIGH);
   digitalWrite(in4L, LOW);
+
   digitalWrite(in1R, HIGH);
   digitalWrite(in2R, LOW);
   digitalWrite(in3R, LOW);
@@ -269,6 +266,7 @@ void slideRight() {
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
   digitalWrite(in4L, HIGH);
+
   digitalWrite(in1R, LOW);
   digitalWrite(in2R, HIGH);
   digitalWrite(in3R, HIGH);
@@ -280,6 +278,7 @@ void motorOff() {
   digitalWrite(in2L, LOW);
   digitalWrite(in3L, LOW);
   digitalWrite(in4L, LOW);
+
   digitalWrite(in1R, LOW);
   digitalWrite(in2R, LOW);
   digitalWrite(in3R, LOW);
@@ -299,7 +298,7 @@ float normalizeAngle(float angle){
 }
 
 void turnToAngle(float targetAngle){
-  const float threshold = 0.03;
+  const float threshold = 0.05;   // small = more precise, but stable
 
   targetAngle = normalizeAngle(targetAngle);
 
@@ -310,33 +309,19 @@ void turnToAngle(float targetAngle){
     if(abs(error) <= threshold)
       break;
 
-    int turnDelay = (int)(abs(error)*50);
-    turnDelay = constrain(turnDelay, 5, 30);
-
+    // Gentle turning to avoid overshoot
     if(error > 0)
       turnLeft();
     else
       turnRight();
 
-    delay(turnDelay);
-    motorBrake();
-    delay(10);
+    delay(20);
+    motorOff();
+    delay(15);
   }
 
-  motorBrake();
-  delay(15);
-}
-
-void motorBrake(){
-  digitalWrite(in1L, HIGH);
-  digitalWrite(in2L, HIGH);
-  digitalWrite(in3L, HIGH);
-  digitalWrite(in4L, HIGH);
-
-  digitalWrite(in1R, HIGH);
-  digitalWrite(in2R, HIGH);
-  digitalWrite(in3R, HIGH);
-  digitalWrite(in4R, HIGH);
+  motorOff();
+  delay(20);
 }
 
 void moveUntilY(float targetY){
@@ -376,3 +361,4 @@ void moveUntilX(float targetX){
 
   motorOff();
 }
+
