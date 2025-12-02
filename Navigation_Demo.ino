@@ -74,42 +74,46 @@ void setup() {
   // Turn off motors - Initial state
   motorOff();
   
-  miniTest();
-
-  /*
   //whole navigation logic
   const float obstacleThresholdCm = 5.0;
   if(Enes100.getY() > 1){
-    turnToAngle(-PI/2);
+    turnToAngle(-PI/2-0.08);
     moveUntilDistance(obstacleThresholdCm);
     //mission
-    if(activateLimitSwitch()){
-      activatePhotoresistor();
-      measureVoltage();
-    }
+    delay(150);
+    activatePhotoresistor();
+    measureVoltage();
+    //}
     moveBackward();
+    delay(1000);
     turnToAngle(PI/2);
     slideRight();
+    delay(1000);
     motorOff();
   } else {
-    turnToAngle(PI/2);
+    turnToAngle(PI/2-0.08);
     moveUntilDistance(obstacleThresholdCm);
     //mission
-    if(activateLimitSwitch()){
-      activatePhotoresistor();
-      measureVoltage();
-    }
+    //if(activateLimitSwitch()){
+    delay(150);
+    activatePhotoresistor();
+    measureVoltage();
+    //}
     moveBackward();
+    delay(2000);
     slideRight();
+    delay(2000);
     motorOff();
   }
 
   moveUntilY(1.85);
   turnToAngle(0.0);
+  slideLeft();
+  delay(2000);
   moveUntilX(3.0);
   slideRight();
   moveUntilX(3.6);
-  */
+  
 }
 
 void loop() {
