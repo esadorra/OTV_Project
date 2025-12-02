@@ -77,28 +77,35 @@ void setup() {
   //whole navigation logic
   const float obstacleThresholdCm = 5.0;
   if(Enes100.getY() > 1){
-    turnToAngle(-PI/2-0.08);
+    turnToAngle((-PI/2)-0.08);
+    moveUntilY(0.4);
+    turnToAngle(-PI/2);
+    slideLeftUntilX(0.5);
     moveUntilDistance(obstacleThresholdCm);
-    //mission
-    delay(150);
-    activatePhotoresistor();
-    measureVoltage();
-    //}
-    moveBackward();
     delay(1000);
+    //mission
+    if(activateLimitSwitch()){
+      activatePhotoresistor();
+      measureVoltage();
+    }
+    moveBackward();
+    delay(2000);
     turnToAngle(PI/2);
     slideRight();
-    delay(1000);
+    delay(2000);
     motorOff();
   } else {
-    turnToAngle(PI/2-0.08);
+    turnToAngle((PI/2)-0.08);
+    moveUntilY(1.35);
+    turnToAngle(PI/2);
+    slideRightUntilX(0.5);
     moveUntilDistance(obstacleThresholdCm);
+    delay(1000);
     //mission
-    //if(activateLimitSwitch()){
-    delay(150);
-    activatePhotoresistor();
-    measureVoltage();
-    //}
+    if(activateLimitSwitch()){
+      activatePhotoresistor();
+      measureVoltage();
+    }
     moveBackward();
     delay(2000);
     slideRight();
@@ -112,6 +119,7 @@ void setup() {
   delay(2000);
   moveUntilX(3.0);
   slideRight();
+  delay(2000);
   moveUntilX(3.6);
   
 }
@@ -379,6 +387,52 @@ void turnToAngle(float targetAngle){
     motorOff();
 }
 
+void slideRightUntilX(float targetX){
+  while(true){
+        float currentX = Enes100.getX();
+        float errorX = targetX - currentX;
+
+        if(abs(errorX) < 0.05){
+          break;
+        }
+
+        if(errorX > 0){
+          slideRight();
+        } else {
+          slideLeft();
+        }
+
+        delay(40);
+        motorOff();
+        delay(20);
+    }
+
+    motorOff();
+}
+
+void slideLeftUntilX(float targetX){
+  while(true){
+        float currentX = Enes100.getX();
+        float errorX = targetX - currentX;
+
+        if(abs(errorX) < 0.05){
+          break;
+        }
+
+        if(errorX > 0){
+          slideLeft();
+        } else {
+          slideRight();
+        }
+
+        delay(40);
+        motorOff();
+        delay(20);
+    }
+
+    motorOff();
+}
+
 //moving forward until an assigned Y value
 void moveUntilY(float targetY){
     while(true){
@@ -425,4 +479,4 @@ void moveUntilX(float targetX){
     }
 
     motorOff();
-}
+  }
