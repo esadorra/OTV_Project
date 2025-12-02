@@ -80,7 +80,7 @@ void setup() {
     turnToAngle((-PI/2)-0.08);
     moveUntilY(0.4);
     turnToAngle(-PI/2);
-    slideLeftUntilX(0.5);
+    slideLeftUntilX(0.3);
     moveUntilDistance(obstacleThresholdCm);
     delay(1000);
     //mission
@@ -92,22 +92,27 @@ void setup() {
     delay(2000);
     turnToAngle(PI/2);
     slideRight();
-    delay(2000);
+    delay(2500);
     motorOff();
   } else {
     turnToAngle((PI/2)-0.08);
-    moveUntilY(1.35);
-    turnToAngle(PI/2);
-    slideRightUntilX(0.5);
+    moveUntilY(1.1);
+    turnToAngle((PI/2)-0.08);
+    slideRightUntilX(0.3);
+    /*
+    while(activateLimitSwitch()){
+      slideLeft();
+    }
+    */
     moveUntilDistance(obstacleThresholdCm);
     delay(1000);
+    moveForward();
+    delay(500);
     //mission
-    if(activateLimitSwitch()){
-      activatePhotoresistor();
-      measureVoltage();
-    }
+    activatePhotoresistor();
+    measureVoltage();
     moveBackward();
-    delay(2000);
+    delay(2500);
     slideRight();
     delay(2000);
     motorOff();
@@ -119,7 +124,7 @@ void setup() {
   delay(2000);
   moveUntilX(3.0);
   slideRight();
-  delay(2000);
+  delay(3000);
   moveUntilX(3.6);
   
 }
@@ -234,7 +239,7 @@ void activatePhotoresistor(){
   delay(1000);
 }
 
-boolean activateLimitSwitch(){
+bool activateLimitSwitch(){
   //Read the state of the limit switch
   int switchState = digitalRead(limitSwitchPin);
 
@@ -401,10 +406,12 @@ void slideRightUntilX(float targetX){
         } else {
           slideLeft();
         }
-
+        
+        /*
         delay(40);
         motorOff();
         delay(20);
+        */
     }
 
     motorOff();
@@ -425,9 +432,11 @@ void slideLeftUntilX(float targetX){
           slideRight();
         }
 
+        /*
         delay(40);
         motorOff();
         delay(20);
+        */
     }
 
     motorOff();
@@ -449,9 +458,11 @@ void moveUntilY(float targetY){
           moveBackward();
         }
 
+        /*
         delay(40);
         motorOff();
         delay(20);
+        */
     }
 
     motorOff();
@@ -473,9 +484,11 @@ void moveUntilX(float targetX){
           moveBackward();
         }
 
+        /*
         delay(40);
         motorOff();
         delay(20);
+        */
     }
 
     motorOff();
