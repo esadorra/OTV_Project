@@ -44,9 +44,9 @@ const int v = A5;
 int value = 0;
 
 void setup() {
-  //Enes100.begin("Enginnering Elephants", HYDROGEN, 19, 1116, 12, 13);
-  //Enes100.println("Starting...");
-  Serial.begin(9600);
+  Enes100.begin("Enginnering Elephants", HYDROGEN, 19, 1116, 12, 13);
+  Enes100.println("Starting...");
+  //Serial.begin(9600);
 
   // Set all the motor control pins to outputs
   pinMode(in1L, OUTPUT);
@@ -74,11 +74,11 @@ void setup() {
   // Turn off motors - Initial state
   motorOff();
   
-  miniTest3();
+  miniTest();
 
   /*
   //whole navigation logic
-  const float obstacleThresholdCm = 1.0;
+  const float obstacleThresholdCm = 5.0;
   if(Enes100.getY() > 1){
     turnToAngle(-PI/2);
     moveUntilDistance(obstacleThresholdCm);
@@ -121,32 +121,18 @@ void loop() {
 }
 
 void miniTest(){
-  turnToAngle(PI/2 - 0.0692036732);
-  motorOff();
+  turnToAngle(PI/2 - 0.08);
   moveUntilY(1.85);
-  motorOff();
   turnToAngle(0.0);
-  motorOff();
   slideLeft();
-  motorOff();
+  delay(2000);
   moveUntilX(3.0);
   motorOff();
   slideRight();
   moveUntilX(3.6);
 }
 
-void miniTest2(){
-  //moveForward();
-  //delay(1000);
-  //activatePhotoresistor();
-  Serial.print("Measuring voltage...");
-  measureVoltage();
-  motorOff();
-  delay(1000);
-}
-
 void miniTest3(){
-  //turnToAngle(PI/2 - 0.0692036732);
   moveUntilDistance(10.0);
   motorOff();
 }
@@ -158,20 +144,20 @@ void moveUntilDistance(float stopCm){
   while(true){
     float distance = activateUltrasonic();
 
-    if(distance > 0 && distance < stopCm){
+    if(distance > 0 && distance <= stopCm){
       motorOff();
       break;
     }
     
-    delay(20);
+    delay(30);
   }
 }
 
 void measureVoltage(){
   value = analogRead(v);
   float voltage = value * (5.0/1023.0);
-  Serial.println("Voltage = ");
-  Serial.println(voltage);
+  Enes100.println("Voltage = ");
+  Enes100.println(voltage);
 }
 
 //normalizing angle when we turn so that it do not turn the long way
@@ -182,24 +168,25 @@ float normalizeAngle(float angle){
 }
 
 //measures distance using ultrasonic sensor
-long activateUltrasonic(){
+float activateUltrasonic(){
   // Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
   digitalWrite(trigPin, LOW);
-  delayMicroseconds(5);
+  delayMicroseconds(2);
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
 
   // Read the signal from the sensor
-  duration = pulseIn(echoPin, HIGH);
+  duration = pulseIn(echoPin, HIGH, 20000);
 
-  cm = (duration/2) / 29.1;     // Divide by 29.1 or multiply by 0.0343 
-   // Divide by 74 or multiply by 0.0135
-  Serial.print(cm);
-  Serial.print(" cm");
+  if(duration == 0){
+    return -1;
+  }
 
-
-  delay(50);
+  cm = duration * 0.0343 / 2;     // Divide by 29.1 or multiply by 0.0343 
+  Enes100.print("Distance: ");
+  Enes100.print(cm);
+  Enes100.print(" cm");
 
   return cm;
 }
@@ -344,7 +331,6 @@ void slideRight(){
   digitalWrite(in4R, LOW);
 }
 
-
 //turning the motor off
 void motorOff(){
   //A
@@ -368,7 +354,7 @@ void turnToAngle(float targetAngle){
     targetAngle = normalizeAngle(targetAngle);
     
     while (true) {
-        float currentAngle = normalizeAngle(Enes100.getTheta());
+        float currentAngle = normalizeAngle(Enes100.getTheta());  
         float error = normalizeAngle(targetAngle - currentAngle);
         
         if (abs(error) <= threshold) {
