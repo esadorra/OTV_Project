@@ -75,7 +75,7 @@ void setup() {
   motorOff();
   
   //whole navigation logic
-  const float obstacleThresholdCm = 5.0;
+  const float obstacleThresholdCm = 10.0;
   if(Enes100.getY() > 1){
     turnToAngle((-PI/2)-0.08);
     moveUntilY(0.4);
@@ -106,11 +106,16 @@ void setup() {
     */
     moveUntilDistance(obstacleThresholdCm);
     delay(1000);
+    while(activateLimitSwitch()){
+      slideLeft();
+    }
     moveForward();
     delay(500);
     //mission
     activatePhotoresistor();
     measureVoltage();
+    motorOff();
+    delay(2000);
     moveBackward();
     delay(2500);
     slideRight();
@@ -126,7 +131,6 @@ void setup() {
   slideRight();
   delay(3000);
   moveUntilX(3.6);
-  
 }
 
 void loop() {
