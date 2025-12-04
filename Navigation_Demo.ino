@@ -106,9 +106,11 @@ void setup() {
     */
     moveUntilDistance(obstacleThresholdCm);
     delay(1000);
-    while(activateLimitSwitch()){
+    while(!isLimitSwitchActive()){
       slideLeft();
     }
+    motorOff();
+    delay(500);
     moveForward();
     delay(500);
     //mission
@@ -119,7 +121,7 @@ void setup() {
     moveBackward();
     delay(2500);
     slideRight();
-    delay(2000);
+    delay(2500);
     motorOff();
   }
 
@@ -243,19 +245,8 @@ void activatePhotoresistor(){
   delay(1000);
 }
 
-bool activateLimitSwitch(){
-  //Read the state of the limit switch
-  int switchState = digitalRead(limitSwitchPin);
-
-  // Check if the switch is pressed (state is LOW)
-  if (switchState == LOW) {
-    Enes100.println("Limit Switch Activated!");
-    return true;
-  } else {
-    // The switch is not pressed
-    Enes100.println("Limit Switch Not Active");
-    return false;
-  } 
+bool isLimitSwitchActive() {
+    return digitalRead(limitSwitchPin) == LOW;
 }
 
 //Going Forward
