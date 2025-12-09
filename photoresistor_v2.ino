@@ -10,9 +10,9 @@ void setup() {
 void loop() {
   //reads photoresistor values
   // might have to change pin number for each sensor
- p1 = analogRead(A0); //White → Not Working   
+ p1 = analogRead(A2); //White → Not Working   
  p2 = analogRead(A1); //Red → No Power
- p3 = analogRead(A2); //Yellow → Low Power
+ p3 = analogRead(A0); //Yellow → Low Power
  p4 = analogRead(A3); //Green → Full Power
  p5 = analogRead(A4); //Blue → Over Power
 
@@ -21,14 +21,19 @@ void loop() {
   lightOn = "White → Not Working";
   if (p2 < maxRead) { maxRead = p2; lightOn = "Red → No Power"; }
   if (p3 < maxRead) { maxRead = p3; lightOn = "Yellow → Low Power"; }
-  if (p4 < maxRead) { maxRead = p4; lightOn = "Green → Full Power"; }
+  //if (p4 < maxRead) { maxRead = p4; lightOn = "Green → Full Power"; }
   if (p5 < maxRead) { maxRead = p5; lightOn = "Blue → Over Power"; }
-  
-  Serial.print("A0, white: ");
+
+  if(p1 > 900 && p2 > 900 && p3 > 900 && p5 > 900){
+    maxRead = p4;
+    lightOn = "Green --> Full Power";
+  }
+
+  Serial.print("A2, white: ");
   Serial.println(p1);
   Serial.print("A1, red: ");
   Serial.println(p2);
-  Serial.print("A2, yellow: ");
+  Serial.print("A0, yellow: ");
   Serial.println(p3);
   Serial.print("A3, green: ");
   Serial.println(p4);
