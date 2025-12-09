@@ -106,9 +106,13 @@ void setup() {
     */
     moveUntilDistance(obstacleThresholdCm);
     delay(1000);
+    /*
     while(!isLimitSwitchActive()){
+      Enes100.println("Sliding Left");
       slideLeft();
+      delay(10);
     }
+    */
     motorOff();
     delay(500);
     moveForward();
@@ -121,7 +125,7 @@ void setup() {
     moveBackward();
     delay(2500);
     slideRight();
-    delay(2500);
+    delay(3000);
     motorOff();
   }
 
