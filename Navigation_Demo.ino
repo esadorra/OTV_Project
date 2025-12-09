@@ -25,9 +25,9 @@ const int in4R = 11;
 const int limitSwitchPin = 1;
 
 //photoresistor pin & variables related to activating the photoresistor
-const int p1 = A0;
+const int p1 = A2;
 const int p2 = A1;
-const int p3 = A2;
+const int p3 = A0;
 const int p4 = A3;
 const int p5 = A4;
 int maxRead = 0;
@@ -73,9 +73,9 @@ void setup() {
 
   // Turn off motors - Initial state
   motorOff();
-  
+
   //whole navigation logic
-  const float obstacleThresholdCm = 10.0;
+  const float obstacleThresholdCm = 9.0;
   if(Enes100.getY() > 1){
     turnToAngle((-PI/2)-0.08);
     moveUntilY(0.4);
@@ -84,7 +84,7 @@ void setup() {
     moveUntilDistance(obstacleThresholdCm);
     delay(1000);
     //mission
-    if(activateLimitSwitch()){
+    if(isLimitSwitchActive()){
       activatePhotoresistor();
       measureVoltage();
     }
@@ -99,33 +99,26 @@ void setup() {
     moveUntilY(1.1);
     turnToAngle((PI/2)-0.08);
     slideRightUntilX(0.3);
-    /*
-    while(activateLimitSwitch()){
-      slideLeft();
-    }
-    */
     moveUntilDistance(obstacleThresholdCm);
     delay(1000);
-    /*
-    while(!isLimitSwitchActive()){
-      Enes100.println("Sliding Left");
-      slideLeft();
-      delay(10);
-    }
-    */
+    slideLeft();
+    delay(1000);
     motorOff();
     delay(500);
     moveForward();
     delay(500);
     //mission
-    activatePhotoresistor();
-    measureVoltage();
+    for(int i=0; i<5; i++){
+      activatePhotoresistor();
+      measureVoltage();
+      delay(150);
+    }
     motorOff();
     delay(2000);
     moveBackward();
     delay(2500);
     slideRight();
-    delay(3000);
+    delay(3500);
     motorOff();
   }
 
@@ -135,33 +128,25 @@ void setup() {
   delay(2000);
   moveUntilX(3.0);
   slideRight();
-  delay(3000);
-  moveUntilX(3.6);
+  delay(4000);
+  moveForward();
+  delay(10000);
+  motorOff();
 }
 
 void loop() {
   activatePhotoresistor();   // prints dominant light
-  activateLimitSwitch();    // prints switch state
+  isLimitSwitchActive();    // prints switch state
   activateUltrasonic();     // prints distance
   measureVoltage();         // prints voltage
   delay(500);
 }
 
 void miniTest(){
-  turnToAngle(PI/2 - 0.08);
-  moveUntilY(1.85);
-  turnToAngle(0.0);
-  slideLeft();
-  delay(2000);
-  moveUntilX(3.0);
-  motorOff();
-  slideRight();
-  moveUntilX(3.6);
-}
-
-void miniTest3(){
-  moveUntilDistance(10.0);
-  motorOff();
+  moveForward();
+  delay(1000);
+  activatePhotoresistor();
+  measureVoltage();
 }
 
 //moves the OTV until the distance reaches below stopCm
@@ -230,19 +215,24 @@ void activatePhotoresistor(){
   lightOn = "White → Not Working";
   if (r2 < maxRead) { maxRead = r2; lightOn = "Red → No Power"; }
   if (r3 < maxRead) { maxRead = r3; lightOn = "Yellow → Low Power"; }
-  if (r4 < maxRead) { maxRead = r4; lightOn = "Green → Full Power"; }
+  //if (r4 < maxRead) { maxRead = r4; lightOn = "Green → Full Power"; }
   if (r5 < maxRead) { maxRead = r5; lightOn = "Blue → Over Power"; }
 
-  Enes100.print("A0, white: ");
-  Enes100.println(p1);
+  if(r1 > 850 && r2 > 850 && r3 > 850 && r5 > 850){
+    maxRead = r4;
+    lightOn = "Green → Full Power";
+  }
+
+  Enes100.print("A2, white: ");
+  Enes100.println(r1);
   Enes100.print("A1, red: ");
-  Enes100.println(p2);
-  Enes100.print("A2, yellow: ");
-  Enes100.println(p3);
+  Enes100.println(r2);
+  Enes100.print("A0, yellow: ");
+  Enes100.println(r3);
   Enes100.print("A3, green: ");
-  Enes100.println(p4);
+  Enes100.println(r4);
   Enes100.print("A4, blue: ");
-  Enes100.println(p5);
+  Enes100.println(r5);
   
   Enes100.print("Light on: ");
   Enes100.println(lightOn);
