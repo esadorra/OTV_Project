@@ -78,21 +78,28 @@ void setup() {
   const float obstacleThresholdCm = 9.0;
   if(Enes100.getY() > 1){
     turnToAngle((-PI/2)-0.08);
-    moveUntilY(0.4);
-    turnToAngle(-PI/2);
+    moveUntilY(0.6);
+    turnToAngle((-PI/2)-0.08);
     slideLeftUntilX(0.3);
     moveUntilDistance(obstacleThresholdCm);
     delay(1000);
+    slideRight();
+    delay(1000);
+    motorOff();
+    delay(500);
     //mission
-    if(isLimitSwitchActive()){
+    for(int i=0; i<5; i++){
       activatePhotoresistor();
       measureVoltage();
+      delay(150);
     }
+    motorOff();
+    delay(2000);
     moveBackward();
     delay(2000);
-    turnToAngle(PI/2);
+    turnToAngle(PI/2-0.08);
     slideRight();
-    delay(2500);
+    delay(3500);
     motorOff();
   } else {
     turnToAngle((PI/2)-0.08);
@@ -135,10 +142,7 @@ void setup() {
 }
 
 void loop() {
-  activatePhotoresistor();   // prints dominant light
-  isLimitSwitchActive();    // prints switch state
-  activateUltrasonic();     // prints distance
-  measureVoltage();         // prints voltage
+  Enes100.println("Hello World");
   delay(500);
 }
 
