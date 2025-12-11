@@ -44,7 +44,7 @@ const int v = A5;
 int value = 0;
 
 void setup() {
-  Enes100.begin("Enginnering Elephants", HYDROGEN, 19, 1116, 12, 13);
+  Enes100.begin("Enginnering Elephants", HYDROGEN, 19, 1201, 12, 13);
   Enes100.println("Starting...");
   //Serial.begin(9600);
 
@@ -77,9 +77,9 @@ void setup() {
   //whole navigation logic
   const float obstacleThresholdCm = 9.0;
   if(Enes100.getY() > 1){
-    turnToAngle((-PI/2)-0.08);
+    turnToAngle(((3*PI)/2)-0.08);
     moveUntilY(0.6);
-    turnToAngle((-PI/2)-0.08);
+    turnToAngle(((3*PI)/2)-0.08);
     slideLeftUntilX(0.3);
     moveUntilDistance(obstacleThresholdCm);
     delay(1000);
@@ -95,6 +95,7 @@ void setup() {
     }
     motorOff();
     delay(2000);
+
     moveBackward();
     delay(2000);
     turnToAngle(PI/2-0.08);
@@ -219,13 +220,15 @@ void activatePhotoresistor(){
   lightOn = "White → Not Working";
   if (r2 < maxRead) { maxRead = r2; lightOn = "Red → No Power"; }
   if (r3 < maxRead) { maxRead = r3; lightOn = "Yellow → Low Power"; }
-  //if (r4 < maxRead) { maxRead = r4; lightOn = "Green → Full Power"; }
+  if (r4 < maxRead) { maxRead = r4; lightOn = "Green → Full Power"; }
   if (r5 < maxRead) { maxRead = r5; lightOn = "Blue → Over Power"; }
 
+  /*
   if(r1 > 850 && r2 > 850 && r3 > 850 && r5 > 850){
     maxRead = r4;
     lightOn = "Green → Full Power";
   }
+  */
 
   Enes100.print("A2, white: ");
   Enes100.println(r1);
