@@ -92,7 +92,7 @@ void setup() {
     moveForward();
     delay(500);
     //mission
-    for(int i=0; i<5; i++){
+    for(int i=0; i<3; i++){
       activatePhotoresistor();
       measureVoltage();
       delay(150);
@@ -118,7 +118,7 @@ void setup() {
     moveForward();
     delay(500);
     //mission
-    for(int i=0; i<5; i++){
+    for(int i=0; i<3; i++){
       activatePhotoresistor();
       measureVoltage();
       delay(150);
