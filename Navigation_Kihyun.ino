@@ -44,7 +44,7 @@ const int v = A5;
 int value = 0;
 
 void setup() {
-  Enes100.begin("Enginnering Elephants", HYDROGEN, 19, 1201, 12, 13);
+  Enes100.begin("Enginnering Elephants", HYDROGEN, 19, 1116, 12, 13);
   Enes100.println("Starting...");
 
   // Set all the motor control pins to outputs
@@ -112,7 +112,7 @@ void setup() {
     moveUntilDistance(obstacleThresholdCm);
     delay(1000);
     slideLeft();
-    delay(1000);
+    delay(100);
     motorOff();
     delay(500);
     moveForward();
@@ -136,10 +136,10 @@ void setup() {
   moveUntilY(1.85);
   turnToAngle(0.0);
   slideLeft();
-  delay(2000);
+  delay(2500);
   moveUntilX(3.0);
   slideRight();
-  delay(4000);
+  delay(5000);
   moveForward();
   delay(10000);
   motorOff();
