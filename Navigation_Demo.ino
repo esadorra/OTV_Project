@@ -46,7 +46,6 @@ int value = 0;
 void setup() {
   Enes100.begin("Enginnering Elephants", HYDROGEN, 19, 1201, 12, 13);
   Enes100.println("Starting...");
-  //Serial.begin(9600);
 
   // Set all the motor control pins to outputs
   pinMode(in1L, OUTPUT);
@@ -71,21 +70,26 @@ void setup() {
 
   pinMode(v, INPUT);
 
-  // Turn off motors - Initial state
+  // Initial state: Motor Turned Off
   motorOff();
 
-  //whole navigation logic
+  //Waiting until the OTV gets the exact position
+  delay(1000);
+
+  //Distance the OTV goes until the mission site
   const float obstacleThresholdCm = 9.0;
+
+  //whole navigation logic
   if(Enes100.getY() > 1){
     turnToAngle(((3*PI)/2)-0.08);
-    moveUntilY(0.6);
+    moveUntilY(0.9);
     turnToAngle(((3*PI)/2)-0.08);
     slideLeftUntilX(0.3);
     moveUntilDistance(obstacleThresholdCm);
     delay(1000);
-    slideRight();
+    slideLeft();
     delay(1000);
-    motorOff();
+    moveForward();
     delay(500);
     //mission
     for(int i=0; i<5; i++){
@@ -99,8 +103,6 @@ void setup() {
     moveBackward();
     delay(2000);
     turnToAngle(PI/2-0.08);
-    slideRight();
-    delay(3500);
     motorOff();
   } else {
     turnToAngle((PI/2)-0.08);
@@ -121,6 +123,7 @@ void setup() {
       measureVoltage();
       delay(150);
     }
+
     motorOff();
     delay(2000);
     moveBackward();
@@ -144,14 +147,7 @@ void setup() {
 
 void loop() {
   Enes100.println("Hello World");
-  delay(500);
-}
-
-void miniTest(){
-  moveForward();
-  delay(1000);
-  activatePhotoresistor();
-  measureVoltage();
+  delay(5000);
 }
 
 //moves the OTV until the distance reaches below stopCm
@@ -223,13 +219,6 @@ void activatePhotoresistor(){
   if (r4 < maxRead) { maxRead = r4; lightOn = "Green → Full Power"; }
   if (r5 < maxRead) { maxRead = r5; lightOn = "Blue → Over Power"; }
 
-  /*
-  if(r1 > 850 && r2 > 850 && r3 > 850 && r5 > 850){
-    maxRead = r4;
-    lightOn = "Green → Full Power";
-  }
-  */
-
   Enes100.print("A2, white: ");
   Enes100.println(r1);
   Enes100.print("A1, red: ");
@@ -246,9 +235,11 @@ void activatePhotoresistor(){
   delay(1000);
 }
 
+/* The limit switch is not working
 bool isLimitSwitchActive() {
     return digitalRead(limitSwitchPin) == LOW;
 }
+*/
 
 //Going Forward
 void moveForward(){
@@ -384,7 +375,6 @@ void turnToAngle(float targetAngle){
         motorOff();
         delay(20);
     }
-    
     motorOff();
 }
 
@@ -402,14 +392,7 @@ void slideRightUntilX(float targetX){
         } else {
           slideLeft();
         }
-        
-        /*
-        delay(40);
-        motorOff();
-        delay(20);
-        */
     }
-
     motorOff();
 }
 
@@ -427,15 +410,8 @@ void slideLeftUntilX(float targetX){
         } else {
           slideRight();
         }
-
-        /*
-        delay(40);
-        motorOff();
-        delay(20);
-        */
-    }
-
-    motorOff();
+  }
+  motorOff();
 }
 
 //moving forward until an assigned Y value
@@ -448,19 +424,8 @@ void moveUntilY(float targetY){
             break;
         }
 
-        if(errorY > 0){
-          moveForward();
-        } else{
-          moveBackward();
-        }
-
-        /*
-        delay(40);
-        motorOff();
-        delay(20);
-        */
+        moveForward();
     }
-
     motorOff();
 }
 
@@ -474,18 +439,11 @@ void moveUntilX(float targetX){
           break;
         }
 
-        if(errorX > 0){
-          moveForward();
-        } else {
-          moveBackward();
-        }
-
-        /*
-        delay(40);
-        motorOff();
-        delay(20);
-        */
-    }
-
-    motorOff();
+       if(errorX > 0){
+         moveForward();
+       } else {
+        moveBackward();
+      }
   }
+  motorOff();
+}
